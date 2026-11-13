@@ -22,4 +22,4 @@ https://sss-ua.org/news/ponad-1000-liudey-zareiestruvalysia-dlia-otrymannia-hros
 
 `research/source.html` — збережений оригінал; `research/article.json` — витягнутий контент. Це статичний дизайн, без публікації на сайті й без інтеграції в WordPress.
 
-Перевірки й обмеження: `docs/VERIFICATION.md`. Прев’ю: `qa/desktop.png`, `qa/mobile.png`.
+Перевірки й обмеження: `docs/VERIFICATION.md`. Прев’ю: `qa/1440-viewport.png`, `qa/390-viewport.png` (актуальні після правок); повні `qa/desktop.png`, `qa/mobile.png` — початкова версія.
