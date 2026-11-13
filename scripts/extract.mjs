@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const src=fs.readFileSync('research/source.html','utf8');
+const article=src.match(/<article class="article-content">([\s\S]*?)<\/article>/)[1];
+const paragraphs=[...article.matchAll(/<p class="wp-block-paragraph">([\s\S]*?)<\/p>/g)].map(m=>m[1]);
+const title=src.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)[1].trim();
+const images=[...article.matchAll(/<img[^>]+src="([^"]+)"/g)].map(m=>m[1]);
+const project=src.match(/<div class="single-news-heading-bottom-column__list">\s*<a href="([^"]+)">\s*([\s\S]*?)<\/a>/);
+fs.writeFileSync('research/article.json',JSON.stringify({title,date:'30.10.2026',paragraphs,images,project:{url:project[1],title:project[2].trim()}},null,2));
+fs.writeFileSync('research/downloads.json',JSON.stringify(images));
+console.log({title,paragraphs:paragraphs.length,images});

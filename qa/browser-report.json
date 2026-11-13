@@ -1,0 +1,51 @@
+{
+  "report": [
+    {
+      "width": 1440,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 1024,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 768,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 390,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 320,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    }
+  ],
+  "reducedMotion": true,
+  "noJavaScriptText": true
+}

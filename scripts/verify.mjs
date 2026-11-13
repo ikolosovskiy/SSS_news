@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const source=JSON.parse(fs.readFileSync('research/article.json','utf8'));
+const page=fs.readFileSync('index.html','utf8');
+assert(page.includes(`<h1 id="news-title" data-enter>${source.title}</h1>`));
+const actual=[...page.matchAll(/<p class="[^"]*" data-source-paragraph="\d">([\s\S]*?)<\/p>/g)].map(m=>m[1]);
+assert.deepEqual(actual,source.paragraphs,'All seven paragraphs must match source HTML exactly');
+assert.equal((page.match(/class="gallery-slide"/g)||[]).length,6);
+for(const m of page.matchAll(/(?:src|href)="((?:assets\/|base.css|style.css|main.js)[^"]*)"/g))assert(fs.existsSync(m[1]),`Missing asset ${m[1]}`);
+console.log('PASS: exact title, all seven paragraph HTML strings, six gallery slides, all local assets.');
