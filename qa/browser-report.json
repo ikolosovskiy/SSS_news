@@ -1,7 +1,34 @@
 {
   "report": [
     {
+      "width": 1920,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 1600,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
       "width": 1440,
+      "overflow": false,
+      "images": true,
+      "exactText": true,
+      "menu": true,
+      "searchFocus": true,
+      "gallery": true
+    },
+    {
+      "width": 1366,
       "overflow": false,
       "images": true,
       "exactText": true,

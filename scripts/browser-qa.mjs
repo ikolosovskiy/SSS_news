@@ -18,11 +18,13 @@ try{
  const evaluate=async expression=>{const r=await cdp('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value};
  await cdp('Page.enable');await cdp('Runtime.enable');
  const report=[];
- for(const width of [1440,1024,768,390,320]){
+ for(const width of [1920,1600,1440,1366,1024,768,390,320]){
   await cdp('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});await cdp('Page.navigate',{url:'http://127.0.0.1:4176/'});await pause(600);await evaluate('document.fonts.ready');
   await evaluate(`Promise.all([...document.images].map(i=>{i.loading='eager';return i.decode()}))`);
   const layout=await evaluate(`({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,images:[...document.images].every(i=>i.complete&&i.naturalWidth>0),title:document.querySelector('h1').textContent,paragraphs:[...document.querySelectorAll('[data-source-paragraph]')].map(p=>p.innerHTML),cover:document.querySelector('.news-cover').getBoundingClientRect().toJSON(),heading:document.querySelector('h1').getBoundingClientRect().toJSON()})`);
   assert(layout.scrollWidth<=width,`No page overflow at ${width}`);assert(layout.images,`All images decoded at ${width}`);assert(layout.cover.top>layout.heading.bottom,'Cover below title');
+  const titleLayout=await evaluate(`(()=>{const title=document.querySelector('h1').getBoundingClientRect(),meta=document.querySelector('.news-kicker').getBoundingClientRect(),grid=document.querySelector('.news-heading-grid').getBoundingClientRect();return {title:title.toJSON(),meta:meta.toJSON(),grid:grid.toJSON()}})()`);
+  if(width>800){assert(titleLayout.title.width>titleLayout.grid.width*.6,'Title occupies wide desktop column');assert(titleLayout.meta.left>=titleLayout.title.right,'Metadata stays to the right of title')}else{assert(titleLayout.meta.top>=titleLayout.title.bottom,'Mobile metadata stays below title')}
   assert.deepEqual(layout.paragraphs,JSON.parse(fs.readFileSync('research/article.json','utf8')).paragraphs);
   await evaluate(`document.querySelector('.menu-toggle').click()`);assert(await evaluate(`document.querySelector('.project-menu').open`));
   await cdp('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await cdp('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape',windowsVirtualKeyCode:27});await pause(50);assert(await evaluate(`!document.querySelector('.project-menu').open`));
@@ -35,6 +37,6 @@ try{
  }
  await cdp('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await cdp('Page.navigate',{url:'http://127.0.0.1:4176/'});await pause(400);assert(await evaluate(`document.getAnimations().length===0&&[...document.querySelectorAll('[data-enter]')].every(e=>getComputedStyle(e).opacity==='1')`));
  await cdp('Emulation.setScriptExecutionDisabled',{value:true});await cdp('Page.navigate',{url:'http://127.0.0.1:4176/'});await pause(500);assert(await evaluate(`document.querySelectorAll('[data-source-paragraph]').length===7&&getComputedStyle(document.querySelector('h1')).opacity==='1'`));
- fs.writeFileSync('qa/browser-report.json',JSON.stringify({report,reducedMotion:true,noJavaScriptText:true},null,2));console.log('PASS: 5 widths, exact rendered text, all images, menu/Escape, search focus, gallery/dots/keyboard, reduced motion, no-JS text.');
+ fs.writeFileSync('qa/browser-report.json',JSON.stringify({report,reducedMotion:true,noJavaScriptText:true},null,2));console.log('PASS: 8 widths, exact rendered text, all images, menu/Escape, search focus, gallery/dots/keyboard, reduced motion, no-JS text.');
 }finally{server.kill();socket?.close();if(chrome.exitCode==null){try{execFileSync('taskkill',['/PID',String(chrome.pid),'/T','/F'],{stdio:'ignore'})}catch{chrome.kill()}}}
 

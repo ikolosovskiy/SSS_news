@@ -6,5 +6,5 @@ assert(page.includes(`<h1 id="news-title" data-enter>${source.title}</h1>`));
 const actual=[...page.matchAll(/<p class="[^"]*" data-source-paragraph="\d">([\s\S]*?)<\/p>/g)].map(m=>m[1]);
 assert.deepEqual(actual,source.paragraphs,'All seven paragraphs must match source HTML exactly');
 assert.equal((page.match(/class="gallery-slide"/g)||[]).length,6);
-for(const m of page.matchAll(/(?:src|href)="((?:assets\/|base.css|style.css|main.js)[^"]*)"/g))assert(fs.existsSync(m[1]),`Missing asset ${m[1]}`);
+for(const m of page.matchAll(/(?:src|href)="((?:assets\/|base.css|style.css|main.js)[^"]*)"/g))assert(fs.existsSync(m[1].split('?')[0]),`Missing asset ${m[1]}`);
 console.log('PASS: exact title, all seven paragraph HTML strings, six gallery slides, all local assets.');

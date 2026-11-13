@@ -1,10 +1,13 @@
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+const assetUrl=file=>`${file}?v=${createHash('sha256').update(fs.readFileSync(file)).digest('hex').slice(0,12)}`;
 const data=JSON.parse(fs.readFileSync('research/article.json','utf8'));
 const template=fs.readFileSync('research/reference-shell.html','utf8');
 const head=template.slice(0,template.indexOf('  <main id="project-main">'))
  .replace(/<title>[\s\S]*?<\/title>/,`<title>${data.title} — Стабілізейшен Суппорт Сервісез</title>`)
  .replace(/<meta name="description" content="[^"]*">/,`<meta name="description" content="${data.paragraphs[0]}">`)
- .replace('<link rel="stylesheet" href="style.css">','<link rel="stylesheet" href="base.css"><link rel="stylesheet" href="style.css">')
+ .replace('<link rel="stylesheet" href="style.css">',`<link rel="stylesheet" href="${assetUrl('base.css')}"><link rel="stylesheet" href="${assetUrl('style.css')}">`)
+ .replace('src="main.js"',`src="${assetUrl('main.js')}"`)
  .replace('class="current" aria-current="page"','')
  .replace('<a href="https://sss-ua.org/news/">Новини</a>','<a href="https://sss-ua.org/news/" class="current" aria-current="page">Новини</a>');
 const footer=template.slice(template.indexOf('  <footer class="site-footer">'));
